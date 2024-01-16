@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./App.css";
-
+import Layout from "./layout";
 import Playground from "./features/Playground";
 
 interface CustomWindow extends Window {
@@ -11,7 +10,7 @@ declare let window: CustomWindow;
 
 window.phiWorker = null;
 
-function App() {
+const App = () => {
   const [phiWorker, setPhiWorker] = useState<Worker | null>(null);
   const phiWorkerRef = useRef<Worker>();
 
@@ -21,18 +20,14 @@ function App() {
       { type: "module" }
     );
 
-    phiWorker.onmessage = (event: MessageEvent<number>) => {
-      console.log(`phiWorker Response =>`, event.data);
-    };
-
     phiWorkerRef.current = phiWorker;
     setPhiWorker(phiWorker);
   }, []);
 
   return (
-    <>
+    <Layout>
       <Playground phiWorker={phiWorker} />
-    </>
+    </Layout>
   );
 }
 
