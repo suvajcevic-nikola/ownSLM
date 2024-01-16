@@ -39,7 +39,7 @@ const Playground = ({ phiWorker }: Props) => {
   const [lastSentence, setLastSentence] = useState<string>("");
   const [userInput, setUserInput] = useState<string>("");
 
-  const isUserInputEmpty = userInput.length === 0;
+  const isUserInputEmpty = userInput?.trim()?.length === 0;
 
   const handlePrompt = () => {
     if (!phiWorker) return;
@@ -75,6 +75,15 @@ const Playground = ({ phiWorker }: Props) => {
     };
   }, [phiWorker]);
 
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (isUserInputEmpty) return;
+
+      handlePrompt();
+    }
+  };
+
   if (!phiWorker) {
     return (
       <div className="w-full flex justify-center items-center">
@@ -100,6 +109,7 @@ const Playground = ({ phiWorker }: Props) => {
             value={userInput}
             placeholder="Ask a question"
             onChange={handleTextAreChange}
+            onKeyDown={handleKeyPress}
           />
           <button
             className="flex justify-center items-center rounded-full border border-transparent w-12 aspect-square text-lg font-semibold bg-neutral-900 hover:border-emerald-300 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200"
