@@ -44,8 +44,6 @@ const Playground = ({ phiWorker }: Props) => {
   const handlePrompt = () => {
     if (!phiWorker) return;
 
-    phiWorker.postMessage({ command: "abort" });
-
     phiWorker.postMessage({
       weightsURL,
       modelID,
