@@ -1,4 +1,4 @@
-const Processor = () => (
+const Body = () => (
   <div className="flex flex-col justify-center items-center bg-gradient-to-br from-neutral-800 to-neutral-600 px-4 py-2 rounded-md ring-[2px] ring-neutral-600">
     <div className="flex flex-col justify-center items-center font-bold tracking-widest transition-colors duration-300 metallic-text">
       <span>Powered By </span>
@@ -25,12 +25,13 @@ const Pin = ({
   />
 );
 
-const PowerGrid = () => {
+const Processor = () => {
   return (
-    <div className="relative w-full h-full flex flex-col items-center">
-      <div className="absolute w-[220px] h-[100px] -top-[18px] bg-emerald-200 blur-lg animate-pulse delayed-component" />
+    <div className="flex p-10">
+    <div className="relative flex flex-col items-center">
+      <div className="absolute w-[220px] h-[100px] -top-[18px] bg-emerald-200 blur-lg animate-pulse fade-in" />
       <div className="z-10 relative flex">
-        <Processor />
+        <Body />
         {[...Array(8)].map((_, index) => (
           <Pin
             key={`top-${index}`}
@@ -60,7 +61,8 @@ const PowerGrid = () => {
         ))}
       </div>
     </div>
+    </div>
   );
 };
 
-export default PowerGrid;
+export default Processor;

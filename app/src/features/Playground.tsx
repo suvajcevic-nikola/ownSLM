@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { PowerGrid } from "../components";
+import { Processor } from "../components";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 
@@ -20,7 +20,7 @@ type PhiWorkerData = {
 };
 
 const Playground = ({ phiWorker }: Props) => {
-  const temperature = 0.5;
+  const temperature = 0.1;
   const topP = 1.0;
   const repeatPenalty = 1.1;
   const seed = 23;
@@ -60,7 +60,7 @@ const Playground = ({ phiWorker }: Props) => {
     });
   };
 
-  const handleTextAreChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
     setUserInput(event.target.value);
 
   useEffect(() => {
@@ -99,16 +99,25 @@ const Playground = ({ phiWorker }: Props) => {
     setLastSentence("");
   };
 
+  const handleStopPrompt = () => {
+    phiWorker.postMessage({ command: "abort" });
+  };
+
+  const actionButtonUtils = (status: string) => ({
+    actionFn: status === "generating" ? handleStopPrompt : handleNewPrompt,
+    label: status === "generating" ? "Stop" : "New Prompt",
+  });
+
   if (!phiWorkerData) {
     return (
       <div className="w-full flex flex-col gap-32 justify-center items-center">
-        <PowerGrid />
+        <Processor />
         <div className="w-full max-w-[680px] px-8 flex justify-center items-center gap-4">
           <textarea
             className="w-full text-2xl h-10 px-2 py-1 rounded-lg ring-[1px] ring-neutral-500 hover:border-emerald-300 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200"
             value={userInput}
             placeholder="Ask a question"
-            onChange={handleTextAreChange}
+            onChange={handleTextChange}
             onKeyDown={handleKeyPress}
           />
           <button
@@ -131,28 +140,31 @@ const Playground = ({ phiWorker }: Props) => {
   const { status, message } = phiWorkerData;
 
   return (
-    <div className="w-full px-8 h-full flex justify-center items-center">
-      <div className="w-full max-w-[680px] flex flex-col justify-center gap-4 text-start">
+    <div className="w-full px-8 h-full flex justify-center">
+      <div className="w-full max-w-[680px] flex flex-col gap-4 text-start">
         <button
           className="w-28 flex justify-center items-center rounded-lg border border-transparent py-2 px-3 text-sm font-semibold bg-neutral-900 hover:border-emerald-300 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200"
-          onClick={handleNewPrompt}
+          onClick={actionButtonUtils(status).actionFn}
         >
-          New Prompt
+          {actionButtonUtils(status).label}
         </button>
         <div>
           <div className="text-4xl text-emerald-300 delayed-component">
             {userInput}
           </div>
           <div>
-            <div className="text-base text-neutral-500 delayed-component">
-              {status?.toLocaleUpperCase()}
-            </div>
             <div className="text-sm text-neutral-600 delayed-component">
               {message?.toLocaleUpperCase()}
             </div>
           </div>
         </div>
         <ReactMarkdown>{lastSentence ? lastSentence : ""}</ReactMarkdown>
+      </div>
+      <div>
+        <img
+          src="small-machine.png"
+          className="hidden fixed sm:block h-1/2 w-auto bottom-0 fade-in smooth-motion hover:brightness-125"
+        />
       </div>
     </div>
   );

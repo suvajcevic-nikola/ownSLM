@@ -48,6 +48,42 @@ a {
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.delayed-component {
-  animation: fadeIn 5s ease-in-out;
+.fade-in {
+  animation: fadeIn 10s forwards;
+}
+
+.smooth-motion {
+  animation: smooth-motion 4s linear infinite;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes smooth-motion {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
